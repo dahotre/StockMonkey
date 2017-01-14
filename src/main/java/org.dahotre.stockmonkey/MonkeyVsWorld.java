@@ -40,6 +40,8 @@ public class MonkeyVsWorld {
         .map(item -> new TransactionSnapshot(item))
         .collect(Collectors.toList());
 
+    transactionSnapshots.forEach(System.out::println);
+
     //fractional SP500 stocks bought = total money spent / sp500 price
     double totalFractionalSP500Shares = transactionSnapshots.stream()
         .mapToDouble(snapshot ->
@@ -49,6 +51,12 @@ public class MonkeyVsWorld {
 
     TickerRecord sp500 = new TickerRecord(YahooFinanceProvider.SP500);
     double sp500Value = totalFractionalSP500Shares * provider.getPrice(sp500);
+    String sp500CalculationMessage =
+        String.format("sp500Value [%f] = totalFractionalSP500Shares [%f] * provider.getPrice(sp500) [%f]"
+        , sp500Value
+        , totalFractionalSP500Shares
+        , provider.getPrice(sp500));
+    System.out.println(sp500CalculationMessage);
 
     double portfolioValue = transactionSnapshots.stream()
         .mapToDouble(snapshot -> {
@@ -72,6 +80,7 @@ public class MonkeyVsWorld {
 
     AmazonSNSClient snsClient = new AmazonSNSClient();
     snsClient.setRegion(Region.getRegion(Regions.US_EAST_1));
+    System.out.println("portfolioStatus = " + portfolioStatus);
     snsClient.publish("arn:aws:sns:us-east-1:117395751670:stock-monkey", portfolioStatus);
     return portfolioStatus;
   }

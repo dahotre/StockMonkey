@@ -3,6 +3,7 @@ package org.dahotre.stockmonkey.model;
 import com.amazonaws.services.simpledb.model.Attribute;
 import com.amazonaws.services.simpledb.model.Item;
 import com.amazonaws.services.simpledb.model.ReplaceableAttribute;
+import com.amazonaws.util.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,4 +99,8 @@ public class TransactionSnapshot {
     return attributes;
   }
 
+  @Override
+  public String toString() {
+    return new JSONObject(this).toString();
+  }
 }
